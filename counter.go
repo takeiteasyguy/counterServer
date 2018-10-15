@@ -51,11 +51,13 @@ func (c *counter) check() {
 	for {
 		i := 0
 		c.m.Lock()
-		for _, conn := range c.conns {
-			if time.Since(conn) > timeRequestsStored {
+		j := len(c.conns)
+		for i < j {
+			if time.Since(c.conns[i]) > timeRequestsStored {
 				c.conns[i] = c.conns[len(c.conns)-1]
 				c.conns[len(c.conns)-1] = time.Time{}
 				c.conns = c.conns[:len(c.conns)-1]
+				j--
 			} else {
 				i++
 			}
